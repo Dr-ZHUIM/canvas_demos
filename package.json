@@ -39,5 +39,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/matter-js": "^0.18.1",
+    "matter-js": "^0.18.0",
+    "react-router-dom": "^6.3.0"
   }
 }

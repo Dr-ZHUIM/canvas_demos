@@ -1,10 +1,54 @@
-import Plum from "./components/Plum/Plum";
-import "./assets/css/global.css"
+import { Route, Routes, Link,useLocation } from "react-router-dom"
+import { useState,useEffect } from "react";
+import Components from "./components";
+import "./assets/css/global.css";
+import "./assets/css/common.css";
+
+let componentsList: Array<any> = [];
+
+for (let key in Components) {
+  componentsList.push(
+    {
+      element: Components[key],
+      path: key
+    }
+  )
+}
+
+const { Plum, Mass } = Components;
 
 function App() {
+
+  const location = useLocation();
+
+  useEffect(() => {
+    (location.pathname === '/' && setHome(true)) || setHome(false) ;
+  }, [location])
+  
+
+  const [home, setHome] = useState(true);
+
   return (
     <div className="app">
-      <Plum></Plum>
+        <Routes>
+          <Route path="/" element={
+            <div className="linkList">
+              {componentsList.map((component, index) => {
+                return (
+                  <Link className="link" to={component.path} key={index}>{component.path}</Link>
+                )
+              })}
+            </div>
+          }></Route>
+          <Route path="/plum" element={<Plum />}></Route>
+          <Route path="/mass" element={<Mass />}></Route>
+        </Routes>
+        {!home
+        ?
+        <Link to="/">Go Back Home</Link>
+        :
+        null
+        }
     </div>
   );
 }

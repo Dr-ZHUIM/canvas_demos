@@ -1,0 +1,14 @@
+.link{
+    color: #cccccc;
+    font-size: 2rem;
+    font-family: 'int-medium';
+    margin: .5rem;
+}
+
+.linkList{
+    width: 600px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}

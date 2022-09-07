@@ -1,3 +1,13 @@
+
+@font-face {
+    font-family: 'int-regular';
+    src: url('../fonts/Inter-Regular.otf');
+}
+
+@font-face {
+    font-family: 'int-medium';
+    src: url('../fonts/Inter-Medium.otf');
+}
 body,html,#root{
     min-width: 100vw;
     min-height: 100vh;
@@ -14,4 +24,8 @@ body,html,#root{
 *{
     margin: 0;
     padding: 0;
+}
+
+:root{
+    font-size: 16px;
 }
