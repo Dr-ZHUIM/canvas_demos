@@ -15,7 +15,7 @@ for (let key in Components) {
   )
 }
 
-const { Plum, Mass } = Components;
+const { Plum, Mass, Scope } = Components;
 
 function App() {
 
@@ -40,12 +40,13 @@ function App() {
               })}
             </div>
           }></Route>
-          <Route path="/plum" element={<Plum />}></Route>
           <Route path="/mass" element={<Mass />}></Route>
+          <Route path="/plum" element={<Plum />}></Route>
+          <Route path="/scope" element={<Scope />}></Route>
         </Routes>
         {!home
         ?
-        <Link to="/">Go Back Home</Link>
+        <Link className="fixed goHome" to="/">Go Back Home</Link>
         :
         null
         }

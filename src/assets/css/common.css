@@ -12,3 +12,17 @@
     align-items: center;
     flex-wrap: wrap;
 }
+
+.fixed{
+    position: fixed;
+}
+
+.goHome{
+    font-family: 'int-medium';
+    font-weight: bolder;
+    text-decoration: none;
+    color: #868686;
+    font-size: 1.4rem;
+    bottom: 2.5rem;
+    right: 2rem;
+}
