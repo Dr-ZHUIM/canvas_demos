@@ -1,44 +1,62 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef } from 'react'
 import "./css/index.css"
-import { useMouse } from 'src/utils/hooks';
 
 export default function Scope() {
 
-    const [boxPosition, setBoxPosition] = useState({ x: 0, y: 0 });
-    const [innerPosition, setInnerPosition] = useState({ x: 0, y: 0 });
+    const [mousePosition,setMousePosition] = useState({ x:0,y:0 });
     const [isDrag, setIsDrag] = useState(false);
-    const boxRef = useRef<HTMLDivElement>(null);
-    const {x,y} = useMouse();
-    const mouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const boxRef = useRef<HTMLDivElement | null>(null);
+    const innerRef = useRef<HTMLDivElement | null>(null);
+
+    const handleTouchStart = (e:React.TouchEvent) => {
+        let _x = boxRef.current!.offsetLeft;
+        let _y = boxRef.current!.offsetTop;
+        setMousePosition({x:e.touches[0].clientX - _x,y:e.touches[0].clientY - _y});
         setIsDrag(true);
-    }, []);
-    const mouseUp = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    };
+    const mouseDown = (e: React.MouseEvent) => {
+        const _x = boxRef.current!.offsetLeft;
+        const _y = boxRef.current!.offsetTop;
+        setMousePosition({x:e.clientX - _x,y:e.clientY - _y});
+        setIsDrag(true);
+    };
+    const move = (e:React.MouseEvent | React.TouchEvent , action:string) => {
+        if(!isDrag)return;
+
+        let _x:any,_y:any;
+        if(action === 'mouse'){
+            const event = e as React.MouseEvent;
+            _x = Math.min(Math.max(0,event.clientX - mousePosition.x),window.innerWidth - boxRef.current!.clientWidth);
+            _y = Math.min(Math.max(0,event.clientY - mousePosition.y),window.innerHeight - boxRef.current!.clientHeight);
+        }else if (action === 'touch'){
+            const event = e as React.TouchEvent;
+            _x = Math.min(Math.max(0,event.touches[0].clientX - mousePosition.x),window.innerWidth - boxRef.current!.clientWidth);
+            _y = Math.min(Math.max(0,event.touches[0].clientY - mousePosition.y),window.innerHeight - boxRef.current!.clientHeight);
+        };
+        boxRef.current!.style.left = _x + "px";
+        boxRef.current!.style.top = _y + "px";
+        innerRef.current!.style.left =  - _x + "px";
+        innerRef.current!.style.top =  - _y + "px";
+    }
+    const mouseUp = () => {
         setIsDrag(false);
-    }, []);
-    useEffect(()=>{
-        console.log(window.screen.width);
-        
-        if(isDrag && boxRef.current){
-            let validatedX = x > window.screen.width - 300 ? window.screen.width - 300 :(x < 300 ? 0 : x);
-            let validatedY = y > window.screen.height - 300 ? window.screen.height - 300 :(y < 300 ? 0 : y);
-            setBoxPosition({x:validatedX,y:validatedY});
-            setInnerPosition({x:-x,y:-y});
-        }
-    },[isDrag,x,y])
+    };;
     return (
         <div
             className='app'
-            onTouchStart={mouseDown}
+            onMouseMove={e=>move(e,'mouse')}
+            onTouchMove={e=>move(e,'touch')}
             >
             <div
-                style={{ left: boxPosition.x + 'px', top: boxPosition.y + 'px'}}
+                style={{ left: 0, top: 0}}
                 className='p-box fixed overflow-hidden'
+                onTouchStart={handleTouchStart}
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
                 onTouchEnd={mouseUp}
                 ref={boxRef}
             >
-                <div className='p-abo p-container' style={{ left: innerPosition.x, top: innerPosition.y }}>
+                <div className='p-abo p-container' ref={innerRef} style={{ left:0, top: 0 }}>
                     <p className='p-bold'>The standard Lorem Ipsum passage, used since the 1500s</p>
                     <p className='p-normal'>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
 
